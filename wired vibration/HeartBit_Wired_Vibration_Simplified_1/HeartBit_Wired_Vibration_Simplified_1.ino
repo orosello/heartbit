@@ -11,8 +11,9 @@ void setup() {
     Serial.println ("Heart beat detected!");
 }
 void loop() {
-sample = digitalRead(HR_RX); //Store signal output if (sample && (oldSample != sample)) {
-if (sample && (oldSample != sample)) {
-} Serial.println("Beat");
-  oldSample = sample;           //Store last signal received
+  sample = digitalRead(HR_RX); //Store signal output if (sample && (oldSample != sample)) {
+  if (sample && (oldSample != sample)) {
+    Serial.println("Beat");
+  }
+  oldSample = sample;          //Store last signal received
 }
