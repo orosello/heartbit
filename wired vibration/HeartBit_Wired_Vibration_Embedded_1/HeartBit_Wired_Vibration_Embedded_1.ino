@@ -97,6 +97,11 @@ float calculate_hrv_time(const long buffer[BUFFER_SIZE], const unsigned last_bea
   return sqrt(current_average);
 }
 
+float calculate_hrv_frequency(const long buffer[BUFFER_SIZE], const unsigned last_beat_index,
+                              const unsigned now, const unsigned period_ms) {
+  
+}
+
 long time_since_start(void){
   const long now = millis();
   return now - time_offset;
