@@ -1,6 +1,6 @@
 #include <Wire.h>
 #include <SD.h>
-#include <cmath>
+//#include <cmath>
 
 //Definitions
 enum {

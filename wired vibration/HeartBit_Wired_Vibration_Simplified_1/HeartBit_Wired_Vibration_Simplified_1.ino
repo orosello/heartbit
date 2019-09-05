@@ -1,5 +1,5 @@
 //Definitions
-const int HR_RX = 12;
+const int HR_RX = 8;
 byte oldSample = -1;
 byte sample = 0;
 void setup() {
