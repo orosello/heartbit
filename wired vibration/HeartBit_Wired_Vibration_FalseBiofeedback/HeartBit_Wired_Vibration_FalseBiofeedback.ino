@@ -77,7 +77,6 @@ void setup() {
   Serial.begin(9600);
   while(!Serial);
   pinMode(MOTOR_PIN, OUTPUT);
-  Serial.println("last_timestamp: " + String("last_timestamp"));
   
   const long now = millis();
   time_offset = now;
@@ -125,12 +124,16 @@ void loop() {
   if (time < timestamps[timestamp_index]) {
     return;
   }
+  // If we're back at the first timestamp, wait for time to wrap around to 0
+  if (timestamp_index == 0 && time >= timestamps[timestamp_count - 2]) {
+    return;
+  }
   const int seconds = (time / SECOND_MS) % MINUTE_SEC;
   const int minutes = time / MINUTE_MS;
   Serial.printf("%02d:%02d\n", minutes, seconds);
   
-  // Time for next beat in list
-  timestamp_index = (timestamp_index + 1) % timestamp_count;
+  // Time for next beat in list (excluding very last timestamp)
+  timestamp_index = (timestamp_index + 1) % (timestamp_count - 1);
   // Kick off first phase of buzz
   buzz_state = BUZZ_STAGE_FIRST_BUZZ;
   buzz_last_updated = time;
