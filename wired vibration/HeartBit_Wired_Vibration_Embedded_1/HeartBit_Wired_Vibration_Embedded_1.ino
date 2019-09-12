@@ -75,31 +75,29 @@ int calculate_bpm(const long buffer[BUFFER_SIZE], const unsigned last_beat_index
   return bpm;
 }
 
-float calculate_hrv_time(const long buffer[BUFFER_SIZE], const unsigned last_beat_index,
+float calculate_hrv_time(const long buffer[BUFFER_SIZE], const int last_beat_index,
                        const unsigned now, const unsigned period_ms) {
   const int first_in_window = index_of_first_beat_in_window(buffer, last_beat_index,
                                                             now, period_ms);
+  if (first_in_window == last_beat_index) {
+    return 0.0f; // Zero intervals
+  }
   if ((first_in_window +1) % BUFFER_SIZE == last_beat_index) {
     // Only one interval present, leave
     return 0.0f;
   }
   float current_average = 0.0f;
   unsigned n = 0;
-  for (int i=first_in_window; (i % BUFFER_SIZE) != ((last_beat_index - 1) % BUFFER_SIZE); i++) {
-    const int j = i % BUFFER_SIZE;
-    const long interval_1 = buffer[j+1] - buffer[j];
-    const long interval_2 = buffer[j+2] - buffer[j+1];
+  for (int i=first_in_window; ((i + 1) % BUFFER_SIZE) != last_beat_index; i++) {
+    const long interval_1 = buffer[(i+1) % BUFFER_SIZE] - buffer[(i) % BUFFER_SIZE];
+    const long interval_2 = buffer[(i+2) % BUFFER_SIZE] - buffer[(i+1) % BUFFER_SIZE];
     const long interval_diff = interval_2 - interval_1;
     const long interval_diff_squared = interval_diff * interval_diff;
     n++;
     current_average += (interval_diff_squared - current_average) / (float) n;
   }
-  return sqrt(current_average);
-}
 
-float calculate_hrv_frequency(const long buffer[BUFFER_SIZE], const unsigned last_beat_index,
-                              const unsigned now, const unsigned period_ms) {
-  
+  return sqrt(current_average);
 }
 
 long time_since_start(void){
